@@ -1,0 +1,10 @@
+command                   - explanation 
+node                      - initiate the node REPL(Read Eval Print Loop)
+.help                     - more information 
+.exit                     - to exit 
+Ctrl+c                    - to abort current expression and again to exit REPL
+Ctrl+d                    - to exit REPL
+node fileName.js 
+const fs = require("fs"); - initialize node file system
+npm init                  - initialize nmp 
+npm install <package>     - installing package (shorthand: npm i <package>), find at npmjs.com 
