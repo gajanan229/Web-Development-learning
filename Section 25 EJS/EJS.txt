@@ -1,0 +1,12 @@
+Templating with EJS(Embedded javaScript):
+using .ejs html files 
+
+<% code %>
+Ex.
+<h1>Hey, it's <%= dayType %>, <%= advice %>!</h1>
+
+then to pass variables:
+res.render("solution.ejs", {
+    dayType: type,
+    advice: adv,
+  });
