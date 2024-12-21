@@ -1,0 +1,68 @@
+npm init -y             - initializes npm without having to input 
+npm install express
+
+base express code:
+import express from "express";
+const app = express();
+const port = 3000;
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}.`);
+});
+
+node index.js           - to start Server
+Ctrl+c                  - to stop Server
+
+HTTP requests:
+get                     - request resource 
+Post                    - send resource
+Put                     - replace resource
+Patch                   - patch up resource
+Delete                  - delete resource
+
+app.get("/", (req, res) => {
+  res.send("<h1>Hello</h1>");
+});
+
+nodemon index.js        - restarts server at every change 
+
+More HTTP requests:
+app.post("/register", (req, res) => {
+  //Do something with the data
+  res.sendStatus(201);
+});
+
+app.put("/user/angela", (req, res) => {
+  res.sendStatus(200);
+});
+
+app.patch("/user/angela", (req, res) => {
+  res.sendStatus(200);
+});
+
+app.delete("/user/angela", (req, res) => {
+  //Deleting
+  res.sendStatus(200);
+});
+
+
+Middleware:
+
+4 types: pre-processing, logging, error, authentication
+
+pre-processing:
+app.use(bodyParser.urlencoded({extended: true}));
+bodyParser              - to get form inputs
+
+logging:
+npm i morgan
+app.use(morgan('tiny')); - logs request and time ex. (GET / 200 5 - 2.488 ms)
+
+custom logging:
+function logger(req, res, next){
+  console.log("request method: " , req.method);
+  console.log("request url: " , req.url);
+  next();
+}
+
+app.use(logger);        - logs request method and url ex.(request method:  GET, request url:  /)
