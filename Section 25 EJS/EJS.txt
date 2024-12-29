@@ -1,7 +1,7 @@
 Templating with EJS(Embedded javaScript):
 using .ejs html files 
 
-<% code %>
+<%= variable %>                       - js output
 Ex.
 <h1>Hey, it's <%= dayType %>, <%= advice %>!</h1>
 
@@ -10,3 +10,34 @@ res.render("solution.ejs", {
     dayType: type,
     advice: adv,
   });
+
+EJS Tags:
+<% Code %>                            - js execute 
+Ex.
+<% console.log("hello") %>
+
+<%- HTML %>                           - Render HTML 
+Ex.
+<%- <h1>Hey</h1> %>
+
+<%%  %%>                              - show <%% or %%>
+Ex.
+<%%
+
+<%# COMMENT %>                        - stop execution, comment code 
+Ex.
+<%# this is a comment %>
+
+<%- include("fileName.ejs") %>        - insert another EJS file 
+
+EJS Data Passing forwards:
+checking if variables have been passed using "locals"
+Ex.
+<% if (locals.fruits) { %>
+  <%= fruits[1] %>
+<% } %>
+
+EJS Data Passing Backwards:
+using req.body["name]
+
+EJS Partials:
