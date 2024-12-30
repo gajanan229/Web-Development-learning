@@ -1,0 +1,16 @@
+REST APIs:
+it uses the HTTP Protocols 
+
+query parameters:
+https://bored-api.appbrewery.com/ENDPOINT?QUERY=VALUE
+or for multiple
+https://bored-api.appbrewery.com/ENDPOINT?QUERY=VALUE&QUERY=VALUE
+Ex.
+https://bored-api.appbrewery.com/filter?type=education
+
+path parameters:
+https://bored-api.appbrewery.com/ENDPOINT/{PATH-PARAMETERS}
+Ex.
+https://bored-api.appbrewery.com/activity/3943506
+
+JSON (JavaScript Object Notation):
