@@ -17,15 +17,21 @@
   <div id="recipeContainer" class="hidden">
 
     <!-- If no recipe yet, show: -->
-    <h2>Pick your favourite taco ingredient 👆</h2>
-    <!-- Else, show the recipe name e.g. <h2>Recipe name</h2>-->
-
-    <h3>Ingredients:</h3>
-    <ul id="ingredientsList">
-      <li>Protein name, protein preparation</li>
-      <li>Salsa name</li>
-      <li>Every other topping</li>
-    </ul>
+    <% if (!locals.info) { %>
+      <h2>Pick your favourite taco ingredient 👆</h2>
+    <% } else { %>
+    
+      <!-- Else, show the recipe name e.g. <h2>Recipe name</h2>-->
+      <h2><%= info.name %></h2>
+      <h3>Ingredients:</h3>
+      <ul id="ingredientsList">
+        <li><%= info.ingredients.protein.name %>, <%= info.ingredients.protein.preparation %></li>
+        <li><%= info.ingredients.salsa.name %></li>
+        <% for(let i=0; i < info.ingredients.toppings.length; i++) { %>
+          <li><%= info.ingredients.toppings[i].quantity %> <%= info.ingredients.toppings[i].name %></li>
+        <% } %>
+      </ul>
+    <% } %>
 
 
 

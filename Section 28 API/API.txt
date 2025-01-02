@@ -14,3 +14,8 @@ Ex.
 https://bored-api.appbrewery.com/activity/3943506
 
 JSON (JavaScript Object Notation):
+js object to JSON:
+const jsonData =  JSON.stringify(data)
+
+JSON to JS object:
+const data = JSON.parse(jsonData)
