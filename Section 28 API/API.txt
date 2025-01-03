@@ -19,3 +19,53 @@ const jsonData =  JSON.stringify(data)
 
 JSON to JS object:
 const data = JSON.parse(jsonData)
+
+APIs:
+import axios from "axios"
+app.get("/", async (req, res) => {
+  try {
+    const response = await axios.get("https://bored-api.appbrewery.com/random");
+    const result = response.data;
+    res.render("index.ejs", { data: result });
+  } catch (error) {
+    console.error("Failed to make request:", error.message);
+    res.render("index.ejs", {
+      error: error.message,
+    });
+  }
+});
+
+API Authentication:
+basic:
+const response = await axios.get(API_URL + "all?page=2", {
+      auth: {
+        username: yourUsername,
+        password: yourPassword,
+      }
+    }); 
+
+apiKey:
+const response = await axios.get(API_URL + "filter?score=5&apiKey=" + yourAPIKey);
+
+bearerToken
+const response = await axios.get(API_URL + "secrets/42", {
+      headers: {
+        Authorization: `Bearer ${yourBearerToken}`
+      },
+    });
+
+newer format:
+axios.get('/user', {
+    params: {
+      ID: 12345
+    }
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  })
+  .finally(function () {
+    // always executed
+  });
