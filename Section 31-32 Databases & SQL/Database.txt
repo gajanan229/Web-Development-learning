@@ -1,0 +1,32 @@
+Types of Databases:
+Structured Query Language (SQL)
+Not only Structured Query Language (NoSQL) 
+
+SQL:
+Data stored in tables (rows and columns)
+Ex. A users table with columns like name, password, email.
+
+SQL databases are also known as "relational" databases.
+They excel at forming relationships between tables.
+
+Ex. linking a blog post to its author in a user's table.
+Multiple blog posts can be linked to a single user record.
+Allows efficient data retrieval using SQL.
+
+Popular SQL Databases:
+Oracle: Expensive, used by large companies. 
+Postgres, MySQL, SQLite: Other notable SQL databases.
+
+NoSQL:
+It is flexible, Can change data structure without altering the entire database.
+Ex. Adding "favorite food" field for only one user.
+
+Uses JSON-like documents, Key-value pairs.
+
+Advantages of NoSQL:
+Flexibility in data structure.
+Easier modification of data on the fly.
+Addresses pains of SQL, especially inflexibility in data structure.
+
+Popular NoSQL Databases: MongoDB, Redis, DynamoDB.
+
