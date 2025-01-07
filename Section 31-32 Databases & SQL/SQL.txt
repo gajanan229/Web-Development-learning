@@ -1,0 +1,58 @@
+CRUD Operations: 
+CRUD (Create, Read, Update, Destroy) it is the core actions for any database.
+
+SQL CREATE TABLE:
+CREATE TABLE table_name (
+    column1 datatype,
+   ....
+);
+
+primary key:
+CREATE TABLE products (
+id INT NOT NULL,
+PRIMARY KEY (id)
+);
+
+Inserting Data into the Table:
+INSERT INTO table_name
+VALUES (value1, value2, value3, ...);
+
+or to insert with missing values:
+INSERT INTO table_name (column1, column2, ...) 
+VALUES (value1, value2, ...);
+
+SELECT * FROM products; - Retrieves all columns and rows from the "products" table.
+Equivalent to the "Show table" command.
+
+SELECT name, price FROM products; - Selects only the "name" and "price" columns from the "products" table.
+
+WHERE Keyword:
+SELECT columns FROM table WHERE condition; - Used to add a search condition.
+
+UPDATE Syntax:
+UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;
+Updates one or more columns in a specified table.
+
+ALTER TABLE Syntax:
+ALTER TABLE table_name ADD COLUMN column_name datatype;
+Used to add, delete, or modify columns in an existing table.
+
+DELETE Syntax:
+DELETE FROM table_name WHERE condition;
+used to delete existing records in a table
+
+FOREIGN KEY (customer_id) REFERENCES customers(id): Links to the id in the customers table.
+
+INNER JOIN Syntax:
+SELECT columns FROM table1 INNER JOIN table2 ON table1.key = table2.key;
+Selects records where keys match in both tables.
+
+
+
+
+
+
+
+
+
+
