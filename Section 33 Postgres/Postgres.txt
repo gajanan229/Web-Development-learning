@@ -1,0 +1,79 @@
+Postgres-Specific Table Creation:
+Example: friends Table:Shows Postgres specific code for defining the fields inside the table.
+
+CREATE TABLE friends (
+id SERIAL PRIMARY KEY,              : Automatically incrementing integer, unique identifier
+name VARCHAR(50),                   : Variable-length string limited to 50 characters.
+age INT,                            : Integer for whole numbers only.
+is_cool BOOLEAN                     : True or false value.
+);                                  Closes off table creation
+
+
+Postgres Data Types - Detailed
+
+VARCHAR(n): Efficient storage as it only uses space required by the actual data.
+CHAR(n): Fixed-length character string. Allocates n characters regardless of actual data size.
+TEXT: Flexible-length string (no fixed size limit). Modern practice has seen that it doesn't take much more space than VARCHAR, but with less of a concern for future data sizes
+INT: Stores whole numbers.
+BOOLEAN: Stores true/false or binary values.
+
+Other Postgres Data Types:
+BIGSERIAL: Larger auto-incrementing integer, for when you need more records than SERIAL can offer
+CHARACTER VARYING (VARCHAR) : Variable character string
+DATE : Stores date values
+
+
+Creating a pg Client:
+const db = new pg.Client({
+    user: "postgres"                (default Postgres user).
+    host: "localhost"               (default if local database).
+    database: "world"               (database name created earlier).
+    password: "Password"            for the Postgres user.
+    port: 5432                      (default Postgres port).
+}); 
+
+Database Connection:
+db.connect();                       - Initiates the connection to the Postgres database.
+
+SQL Query:
+db.query("SELECT * FROM capitals", (err, res) => {...});
+    Executes the SQL query to fetch all data from the capitals table.
+    Provides a callback with error and results (res).
+
+Data Handling:
+Error Handling: console.log(err);   (if an error occurs).
+Data Storage: quiz = res.rows;      - Stores fetched data into a variable named quiz.
+
+Closing Connection:
+db.end();                           - Closes the database connection, which is best practice.
+
+Ex.
+db.query("SELECT * FROM capitals", (err, res) =>{
+  if (err){
+    console.error("Error executing query", err.stack);
+  } else {
+    quiz = res.rows;
+  }
+  db.end();
+});
+
+LIKE Clause (Loose Matching): SELECT column FROM table WHERE column LIKE pattern;
+Used for partial or pattern matching.
+%: Wildcard character representing zero or more characters.
+||: String concatenation operator.
+
+Example: WHERE country LIKE 'United%':
+SELECT country 
+FROM world_food 
+WHERE country LIKE 'U' || '%';
+
+Parameterized Queries:
+db.query(sql VALUES ($1, $2), [value1, value2]);
+Uses placeholders ($1, $2, etc.) in the SQL statement.
+
+An array provides the values that will replace placeholders in the SQL statement.
+
+
+
+
+
