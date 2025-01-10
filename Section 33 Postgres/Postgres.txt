@@ -75,5 +75,96 @@ An array provides the values that will replace placeholders in the SQL statement
 
 
 
+relational databases:
+
+One-to-One Relationships:
+One record in a table maps to exactly one record in another table
+Ex. A student table linked to a contact table via the id field.
+CREATE TABLE contact_detail (
+  id INT UNIQUE REFERENCES student(id),       - Links to the id (PRIMARY KEY) column in the student table.
+  telephone VARCHAR(20),
+  address VARCHAR(255)
+);
+join:
+  SELECT * 
+  FROM student
+  JOIN contact_detail
+  ON student.id = contact_detail.id
+
+One-to-Many Relationships:
+One record in a table can be associated with multiple records in another table (but the many side can only be associated with one of the one side)
+Ex. A student can have many homework submissions.
+  Perspective:
+    From student to homework: One-to-Many.
+    From homework to student: Many-to-One.
+Diagram: Illustrates a One-to-Many relationship visually, using a "crow's feet" symbol on the "many" side.
+CREATE TABLE homework_submission (
+  id SERIAL PRIMARY KEY,
+  mark INT,
+  student_id INT REFERENCES student(id)       - ets the Foreign Key relationship, linking to the student id in the student table.
+);
+
+Many-to-Many Relationships:
+Multiple records in one table can be associated with multiple records in another table/tables.
+Ex. One student can be enrolled in many classes and One class can have many students.
+Intermediate Table: Requires an extra table to represent the relationship itself (linking table).
+
+
+SQL Aliases:
+To give a temporary, shorter name to a table or a column in a SQL statement.
+SELECT field AS alias_name FROM table         - Renames a column in a result set.
+Ex. 
+  SELECT s.id AS id, first_name, last_name, title
+  FROM enrollment AS e
+  JOIN student AS s ON s.id = e.student_id
+  JOIN class AS c ON c.id = e.class_id;
+
+
+ALTER TABLE Command:
+Syntax: ALTER TABLE table_name command;
+
+RENAME TO Command:
+ALTER TABLE student RENAME TO user;
+
+ALTER COLUMN Command:
+ALTER TABLE table_name ALTER COLUMN column_name TYPE new_data_type;
+
+Adding constraints
+ALTER TABLE table_name ADD CONSTRAINT constraint_name 
+Ex. ALTER TABLE table_name ADD UNIQUE (column1, column2);
+
+
+DROP TABLE Command:
+Syntax:
+  DROP TABLE table_name;
+DROP TABLE IF EXISTS:
+  DROP TABLE IF EXISTS table_name;
+
+
+UPDATE Command:
+Syntax:
+  UPDATE table_name SET column1 = value1, column2 = value2, ... WHERE condition;
+
+
+ORDER BY Command:
+Syntax:
+  SELECT * FROM table_name ORDER BY column_name ASC|DESC;
+    ASC for ascending order (default).
+    DESC for descending order.
+  Ex. 
+    SELECT * FROM users ORDER BY name DESC;
+
+
+DELETE FROM Command:
+Syntax:
+  DELETE FROM table_name WHERE condition;
+  Ex. 
+    DELETE FROM visited_countries WHERE id = 6;
+
+
+
+
+
+
 
 
