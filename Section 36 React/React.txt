@@ -1,0 +1,87 @@
+"dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.16",
+    "globals": "^15.14.0",
+    "vite": "^6.0.5"
+  }
+
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+---------------------------------------------------------------------
+
+create new react project:
+    npm create vite@latest my-react-app --template react
+        Select a framework: » React
+        Select a variant: » JavaScript
+    cd my-react-app
+    npm install
+    npm run dev
+
+In the index.html there needs to be a div element with an id of "root"
+    <div id="root"></div>
+
+to import react:
+    import React from "react";
+
+to insert html in the root:
+    import { createRoot } from "react-dom/client";
+
+    const container = document.getElementById("root");
+    const root = createRoot(container);
+    root.render(<div>
+        <h1>Hello World</h1>
+        <p>This is a paragraph</p>
+    </div>);
+
+to use html atributes make the atribute names camel case:
+    className="heading" contentEditable="true" spellcheck="false"
+
+In-line CSS:
+    style={{color: "red"}}
+        it expects properties to be thin the form of js object 
+
+React components:
+    function Heading() {
+        return (<h1>My Favourite Foods</h1>);
+    }
+    export default Heading;
+
+    in the index.js:
+        import Heading from "./Heading";
+
+
+export, import and modules:
+    export default pi;
+    export { doublePi, triplePi };
+
+    import pi, { doublePi, triplePi } from "./math.js";
+    or
+    import * as pi from "./math.js";
+    used like: 
+        pi.default
+        pi.doublePi()
+
+React Props:
+    function Card(props) {
+        return (
+            <div>
+            <h2>{props.name}</h2>
+            <p>{props.email}</p>
+            </div>
+        )
+    }
+
+    use in render:
+        <Card name="Beyonce" email="b@beyonce.com"/>
+
