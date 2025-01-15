@@ -15,6 +15,11 @@
     "vite": "^6.0.5"
   }
 
+import { createRoot } from "react-dom/client";
+
+const container = document.getElementById("root");
+const root = createRoot(container);
+
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
 ---------------------------------------------------------------------
@@ -84,4 +89,114 @@ React Props:
 
     use in render:
         <Card name="Beyonce" email="b@beyonce.com"/>
+
+mapping components:
+    {contacts.map(createCard)}
+
+    function createCard(contact){
+            return <Card 
+            key={contact.id}
+            name={contact.name}
+        />
+    }   
+
+Maps/Filter/Reduce:
+    Map: Create a new array by doing something with each item in an array.
+        const newNumbers = numbers.map(function (x) {
+            return x * 2;
+        });
+    
+    Filter: Create a new array by keeping the items that return true.
+        const newNumbers3 = numbers.filter(function(num) {
+            return num < 10;
+        });
+    
+    Reduce: Accumulate a value by doing something to each item in an array.
+        var newNumber5 = numbers.reduce(function (accumulator, currentNumber) {
+            return accumulator + currentNumber;
+        })
+
+    Find: find the first item that matches from an array.
+
+        const newNumber7 = numbers.find(function (num) {
+            return num > 10;
+        })
+
+    FindIndex: find the index of the first item that matches.
+
+        const newNumber8 = numbers.findIndex(function (num) {
+            return num > 10;
+        })
+
+Arrow functions:
+    numbers.map(x => x * x);
+    or
+    numbers.map((x, y) => {
+        y = y+2
+        x * y
+    });
+
+Ternary operator, AND operator:
+    Ternary operator:
+        {Condition ? statement if TRUE : statement if FALSE}
+        Ex. 
+            {isLoggedIn ? <h1>Hello</h1> : <Login />}
+
+    AND operator:   like ternary operator but only outputs if condition is true
+        {Condition && statement if TRUE }
+        Ex. 
+            {currentTime > 12 && <h1>Why are you still working?</h1>}
+
+React Hooks:
+    must be done in react functions 
+    const [count, setCount] = useState(0);
+
+Destructuring:
+    objects:
+        const {PropertyName: aliasIdentifier , PropertyName: aliasIdentifier } = object
+        Ex.
+            const {coloursByPopularity: cbp, speedStats: ss} = tesla
+    
+    Arrays:
+        const [aliasIdentifier, aliasIdentifier2] = Arrays;
+        Ex.
+            const [honda, tesla] = cars;
+
+React forms:
+    <form onSubmit={handleClick}>
+
+    function handleClick(event){
+        setSubmitName(name);
+        event.preventDefault();
+    }
+
+events:
+    const { name, value } = event.target;
+
+spread operator:
+    const citrus = ["Lime", "Lemon", "Orange"];
+    const fruits = ["Apple", ...citrus, "Banana", "Coconut"];
+
+    const fullName = {
+        fName: "James",
+        lName: "Bond"
+    };
+    const user = {
+        ...fullName,
+        id: 1,
+        username: "jamesbond007"
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
