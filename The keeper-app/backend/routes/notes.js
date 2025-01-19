@@ -4,7 +4,7 @@ import pool from "../../config/db.js";
 const router = express.Router();
 
 // Get all notes
-router.get("/", async (req, res) => {
+router.get("/notes", async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM notes");
         res.json(result.rows);
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
 });
 
 // Add a new note
-router.post("/", async (req, res) => {
+router.post("/notes", async (req, res) => {
     const { title, content } = req.body;
     try {
         const result = await pool.query(
@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
 });
 
 // Delete a note
-router.delete("/:id", async (req, res) => {
+router.delete("/notes/:id", async (req, res) => {
     const { id } = req.params;
     try {
         await pool.query("DELETE FROM notes WHERE id = $1", [id]);
