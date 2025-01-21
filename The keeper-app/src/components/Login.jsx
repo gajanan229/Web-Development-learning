@@ -13,15 +13,18 @@ function Login() {
         })
             .then((response) => response.json())
             .then((data) => {
-                if (data.success) {
+                if (data.jwtToken) {
+                    // Store the token in localStorage
+                    localStorage.setItem("jwt_token", data.jwtToken);
                     alert("Login successful!");
-                    window.location.href = "/notes";
+                    window.location.href = "/notes"; // Redirect to Notes
                 } else {
-                    alert(data.message);
+                    alert(data); // Show error message
                 }
             })
             .catch((error) => console.error("Error logging in:", error));
     }
+
 
     return (
         <div className="auth-container">

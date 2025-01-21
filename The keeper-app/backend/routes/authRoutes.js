@@ -1,145 +1,128 @@
 import express from "express";
-import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
-import passport from "passport";
-import { Strategy as LocalStrategy } from "passport-local";
-import { Strategy as GoogleStrategy } from "passport-google-oauth2";
-import session from "express-session";
+import jwt from "jsonwebtoken";
+import db from "../../config/db.js";
 import dotenv from "dotenv";
-import db from "../../config/db.js"; // Importing the existing database connection pool
 
 dotenv.config();
 
 const router = express.Router();
-const saltRounds = 10;
 
-router.use(
-    session({
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: true,
-    })
-);
+// Middleware for validating request body
+function validInfo(req, res, next) {
+    const { email, password } = req.body;
 
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
-router.use(passport.initialize());
-router.use(passport.session());
-
-// Passport Local Strategy for authentication
-passport.use(
-    new LocalStrategy(async (username, password, done) => {
-        try {
-            const result = await db.query("SELECT * FROM users WHERE email = $1", [username]);
-            if (result.rows.length === 0) {
-                return done(null, false, { message: "Incorrect email or password." });
-            }
-
-            const user = result.rows[0];
-            const isValid = await bcrypt.compare(password, user.password);
-
-            if (isValid) {
-                return done(null, user);
-            } else {
-                return done(null, false, { message: "Incorrect email or password." });
-            }
-        } catch (error) {
-            return done(error);
-        }
-    })
-);
-
-// Passport Google OAuth2 Strategy for authentication
-passport.use(
-    new GoogleStrategy(
-        {
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: "http://localhost:3000/auth/google/secrets",
-            passReqToCallback: true,
-            userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo",
-        },
-        async (request, accessToken, refreshToken, profile, done) => {
-            try {
-                const result = await db.query("SELECT * FROM users WHERE email = $1", [profile.email]);
-            if (result.rows.length === 0) {
-                const newUser = await db.query(
-                    "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
-                        [profile.email, "google"]
-                );
-                return done(null, newUser.rows[0]);
-            } else {
-                return done(null, result.rows[0]);
-            }
-            } catch (error) {
-                return done(error);
-            }
-        }
-        )
-);
-
-// Serialize and deserialize user information
-passport.serializeUser((user, cb) => {cb(null, user);});passport.deserializeUser(async (id, done) => {
-    try {
-        const result = await db.query("SELECT * FROM users WHERE id = $1", [id]);
-        done(null, result.rows[0]);
-    } catch (error) {
-        done(error, null);
+    function validEmail(userEmail) {
+        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(userEmail);
     }
-});
 
-// Routes
-router.post("/register", async (req, res) => {
+    if (req.path === "/register") {
+        if (![email, password].every(Boolean)) {
+            return res.json("Missing Credentials");
+        }
+        // else if (!validEmail(email)) {
+        //     return res.json("Invalid Email");
+        // }
+    } else if (req.path === "/login") {
+        if (![email, password].every(Boolean)) {
+            return res.json("Missing Credentials");
+        } 
+        // else if (!validEmail(email)) {
+        //     return res.json("Invalid Email");
+        // }
+    }
+
+    next();
+}
+
+// Middleware for authorizing JWT tokens
+function authorize(req, res, next) {
+    const token = req.header("jwt_token");
+
+    if (!token) {
+        return res.status(403).json({ msg: "Authorization denied" });
+    }
+
+    try {
+        const verify = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = verify.user;
+        next();
+    } catch (err) {
+        res.status(401).json({ msg: "Token is not valid" });
+    }
+}
+
+// JWT generator function
+const jwtGenerator = (userId) => {
+    const payload = {
+        user: {
+            id: userId,
+        },
+    };
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1h" });
+};
+
+// Register route
+router.post("/register", validInfo, async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const userExists = await db.query("SELECT * FROM users WHERE email = $1", [email]);
-        if (userExists.rows.length > 0) {
-            return res.status(400).json({ message: "User already exists." });
+        const user = await db.query("SELECT * FROM users WHERE email = $1", [email]);
+
+        if (user.rows.length > 0) {
+            return res.status(401).json("User already exists!");
         }
 
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
-        const result = await db.query(
+        const salt = await bcrypt.genSalt(10);
+        const bcryptPassword = await bcrypt.hash(password, salt);
+
+        const newUser = await db.query(
             "INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *",
-                [email, hashedPassword]
+            [email, bcryptPassword]
         );
 
-        req.login(result.rows[0], (err) => {
-            if (err) {
-                return  res.status(500).json({ message: "Error logging in after registration." });
-            }
-            res.status(201).json({ message: "Registration successful." });
-        });
-    } catch (error) {
-        res.status(500).json({ message: "Error registering user." });
+        const jwtToken = jwtGenerator(newUser.rows[0].id);
+
+        return res.json({ jwtToken });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
     }
 });
 
-router.post(
-    "/login",
-    passport.authenticate("local", {
-        successRedirect: "/notes",
-        failureRedirect: "/login",
-    })
-);
+// Login route
+router.post("/login", validInfo, async (req, res) => {
+    const { email, password } = req.body;
 
-router.get("/auth/google", passport.authenticate("google", { scope: ["email", "profile"] }));
+    try {
+        const user = await db.query("SELECT * FROM users WHERE email = $1", [email]);
 
-router.get(
-    "/auth/google/callback",
-    passport.authenticate("google", {
-        successRedirect: "/notes",
-        failureRedirect: "/login",
-    })
-);
-
-router.get("/logout", (req, res) => {
-    req.logout((err) => {
-        if (err) {
-        return res.status(500).json({ message: "Error logging out." });
+        if (user.rows.length === 0) {
+            return res.status(401).json("Invalid credentials");
         }
-        res.redirect("/");
-    });
+
+        const validPassword = await bcrypt.compare(password, user.rows[0].password);
+
+        if (!validPassword) {
+            return res.status(401).json("Invalid credentials");
+        }
+
+        const jwtToken = jwtGenerator(user.rows[0].id);
+        return res.json({ jwtToken });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
+});
+
+// Verify route
+router.post("/verify", authorize, (req, res) => {
+    try {
+        res.json(true);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server error");
+    }
 });
 
 export default router;
