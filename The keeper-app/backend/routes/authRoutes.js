@@ -44,8 +44,8 @@ function authorize(req, res, next) {
     }
 
     try {
-        const verify = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = verify.user;
+        const payload = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = payload.user; // `user` is set in the payload during token generation
         next();
     } catch (err) {
         res.status(401).json({ msg: "Token is not valid" });
@@ -126,3 +126,6 @@ router.post("/verify", authorize, (req, res) => {
 });
 
 export default router;
+
+export {authorize};
+

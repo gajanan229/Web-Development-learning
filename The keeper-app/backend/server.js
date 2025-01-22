@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
+import notesRoutes from "./routes/notes.js";
 import { connectDB } from "../config/db.js";
 
 const app = express();
@@ -15,6 +16,7 @@ connectDB();
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/auth", notesRoutes);
 
 // Start the server
 app.listen(PORT, () => {

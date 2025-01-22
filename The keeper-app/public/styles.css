@@ -176,3 +176,18 @@ form.create-note button {
 .auth-button:hover {
   background-color: #145ca1;
 }
+
+.logout-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: auto;
+}
+
+.logout-button:hover {
+  background-color: #d32f2f;
+}

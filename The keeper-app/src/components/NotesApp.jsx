@@ -83,7 +83,7 @@ function NotesApp() {
         {notes.map((noteItem, index) => (
             <Note
                 key={index}
-                id={index}
+                id={noteItem.id}
                 title={noteItem.title}
                 content={noteItem.content}
                 onDelete={deleteNote}
